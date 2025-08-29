@@ -179,6 +179,11 @@ class ICSToCalDAV:
                         continue
 
             try:
+                subcomponents = list(remote_event.subcomponents)
+                # Remove VALARM components
+                for subcomp in subcomponents:
+                    if subcomp.name == 'VALARM':
+                        remote_event.subcomponents.remove(subcomp)
                 self.local_calendar.save_event(self._wrap(remote_event))
             except vobject.base.ValidateError:
                 logger.exception("Invalid event was downloaded from the remote. It will be skipped.")
